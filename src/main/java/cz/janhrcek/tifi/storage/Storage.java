@@ -7,9 +7,12 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
+import javax.persistence.Query;
+import java.util.List;
+
 public class Storage {
 
-    private SessionFactory sessionFactory = createSessionFactory();
+    final private SessionFactory sessionFactory = createSessionFactory();
 
 
     public void addExpense(Expense e) {
@@ -17,6 +20,13 @@ public class Storage {
             session.beginTransaction();
             session.save(e);
             session.getTransaction().commit();
+        }
+    }
+
+    public List<Expense> getExpenses() {
+        try (Session session = sessionFactory.openSession()) {
+            Query q = session.createQuery("from Expense");
+            return (List<Expense>) q.getResultList();
         }
     }
 

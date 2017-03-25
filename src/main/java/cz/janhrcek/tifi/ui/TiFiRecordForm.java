@@ -15,11 +15,10 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 public class TiFiRecordForm extends HBox {
-    private DatePicker datePicker;
-    private TextField amountField;
-    private TextField descriptionField;
-    private Button addButton;
-    private Storage storage;
+    private final DatePicker datePicker;
+    private final TextField amountField;
+    private final TextField descriptionField;
+    private final Storage storage;
 
     public TiFiRecordForm(Storage storage) {
         this.storage = storage;
@@ -34,18 +33,22 @@ public class TiFiRecordForm extends HBox {
         descriptionField.setPromptText("Description");
         descriptionField.setMinWidth(150);
 
-        this.addButton = new Button("Add");
+        Button addButton = new Button("Add");
         addButton.setMinWidth(50);
-        addButton.setOnAction(ADD_BUTTON_CLICK_HANLDER);
+        addButton.setOnAction(ADD_BUTTON_CLICK_HANDLER);
 
         getChildren().addAll(datePicker, amountField, descriptionField, addButton);
     }
 
+    private void clearForm() {
+        amountField.setText("");
+        descriptionField.setText("");
+    }
 
     /*
     * Listens to length of text field that doesn't allow anything else to be entered than numbers.
     */
-    private ChangeListener<Number> ALLOW_NUMBERS_ONLY = new ChangeListener<Number>() {
+    private final ChangeListener<Number> ALLOW_NUMBERS_ONLY = new ChangeListener<Number>() {
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldLength, Number newLength) {
             if (newLength.intValue() > oldLength.intValue()) {
@@ -58,10 +61,10 @@ public class TiFiRecordForm extends HBox {
         }
     };
 
-    private EventHandler<ActionEvent> ADD_BUTTON_CLICK_HANLDER = new EventHandler<ActionEvent>() {
+    private final EventHandler<ActionEvent> ADD_BUTTON_CLICK_HANDLER = new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
-            getData().ifPresent(e -> storage.addExpense(e));
+            getData().ifPresent(storage::addExpense);
         }
 
         private Optional<Expense> getData() {
@@ -69,6 +72,7 @@ public class TiFiRecordForm extends HBox {
             String amtStr = amountField.getText();
             String desc = descriptionField.getText();
             if (date != null && !amtStr.isEmpty()) {
+                clearForm();
                 return Optional.of(new Expense(date, Integer.parseInt(amtStr), desc));
             } else {
                 return Optional.empty();
