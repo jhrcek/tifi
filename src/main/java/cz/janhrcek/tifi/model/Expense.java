@@ -12,15 +12,21 @@ public class Expense {
     private int id;
     private LocalDate date;
     private int amount;
+
+
+    private String category;
+    private String subcategory;
     private String description;
 
-    public Expense() {
 
+    public Expense() {
     }
 
-    public Expense(LocalDate date, int amount, String description) {
+    public Expense(LocalDate date, int amount, String category, String subcategory, String description) {
         this.date = date;
         this.amount = amount;
+        this.category = category;
+        this.subcategory = subcategory;
         this.description = description;
     }
 
@@ -54,5 +60,21 @@ public class Expense {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getSubcategory() {
+        return subcategory;
+    }
+
+    public void setSubcategory(String subcategory) {
+        this.subcategory = subcategory;
     }
 }

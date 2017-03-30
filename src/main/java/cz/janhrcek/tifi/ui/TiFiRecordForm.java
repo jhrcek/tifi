@@ -1,33 +1,57 @@
 package cz.janhrcek.tifi.ui;
 
+import cz.janhrcek.tifi.model.Categories;
 import cz.janhrcek.tifi.model.Expense;
-import cz.janhrcek.tifi.storage.Storage;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class TiFiRecordForm extends HBox {
     private final DatePicker datePicker;
     private final TextField amountField;
+    private final ChoiceBox<String> catDropdown;
+    private final ChoiceBox<String> subcatDropdown;
     private final TextField descriptionField;
-    private final Storage storage;
+    private static final Categories cats = new Categories();
 
-    public TiFiRecordForm(Storage storage) {
-        this.storage = storage;
+    public TiFiRecordForm(Consumer<Expense> newExpenseCallback) {
         this.datePicker = new DatePicker(LocalDate.now());
-        datePicker.setMinWidth(110);
+        datePicker.setMinWidth(100);
 
         this.amountField = new TextField();
         amountField.setPromptText("Amount");
+        amountField.setMinWidth(70);
         amountField.lengthProperty().addListener(ALLOW_NUMBERS_ONLY);
+
+        this.catDropdown = new ChoiceBox<>();
+        catDropdown.getItems().addAll(cats.getCategories());
+        catDropdown.setMinWidth(140);
+        catDropdown.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                List<String> subcats = cats.getSubcategories(newValue);
+                if (subcats.isEmpty()) {
+                    subcatDropdown.setDisable(true);
+                } else {
+                    subcatDropdown.setDisable(false);
+                    subcatDropdown.getItems().clear();
+                    subcatDropdown.getItems().addAll(subcats);
+                }
+            }
+        });
+
+        this.subcatDropdown = new ChoiceBox<>();
+        subcatDropdown.setMinWidth(100);
+
 
         this.descriptionField = new TextField();
         descriptionField.setPromptText("Description");
@@ -35,15 +59,30 @@ public class TiFiRecordForm extends HBox {
 
         Button addButton = new Button("Add");
         addButton.setMinWidth(50);
-        addButton.setOnAction(ADD_BUTTON_CLICK_HANDLER);
+        addButton.setOnAction(event -> getData().ifPresent(newExpenseCallback));
 
-        getChildren().addAll(datePicker, amountField, descriptionField, addButton);
+        getChildren().addAll(datePicker, amountField, catDropdown, subcatDropdown, descriptionField, addButton);
     }
 
     private void clearForm() {
         amountField.setText("");
         descriptionField.setText("");
     }
+
+    private Optional<Expense> getData() {
+        LocalDate date = datePicker.getValue();
+        String amtStr = amountField.getText();
+        String cat = catDropdown.getValue();
+        String subcat = subcatDropdown.getValue();
+        String desc = descriptionField.getText();
+        if (date != null && !amtStr.isEmpty()) {
+            clearForm();
+            return Optional.of(new Expense(date, Integer.parseInt(amtStr), cat, subcat, desc));
+        } else {
+            return Optional.empty();
+        }
+    }
+
 
     /*
     * Listens to length of text field that doesn't allow anything else to be entered than numbers.
@@ -57,25 +96,6 @@ public class TiFiRecordForm extends HBox {
                 if (!('0' <= ch && ch <= '9')) {
                     amountField.setText(input.substring(0, input.length() - 1));
                 }
-            }
-        }
-    };
-
-    private final EventHandler<ActionEvent> ADD_BUTTON_CLICK_HANDLER = new EventHandler<ActionEvent>() {
-        @Override
-        public void handle(ActionEvent event) {
-            getData().ifPresent(storage::addExpense);
-        }
-
-        private Optional<Expense> getData() {
-            LocalDate date = datePicker.getValue();
-            String amtStr = amountField.getText();
-            String desc = descriptionField.getText();
-            if (date != null && !amtStr.isEmpty()) {
-                clearForm();
-                return Optional.of(new Expense(date, Integer.parseInt(amtStr), desc));
-            } else {
-                return Optional.empty();
             }
         }
     };
