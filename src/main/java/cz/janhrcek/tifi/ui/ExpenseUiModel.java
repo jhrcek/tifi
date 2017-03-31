@@ -45,11 +45,9 @@ public class ExpenseUiModel {
         return date.get();
     }
 
-
     public ObjectProperty dateProperty() {
         return date;
     }
-
 
     public String getCategory() {
         return category.get();

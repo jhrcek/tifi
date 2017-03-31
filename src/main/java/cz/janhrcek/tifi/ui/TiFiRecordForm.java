@@ -21,11 +21,11 @@ public class TiFiRecordForm extends HBox {
     private final ChoiceBox<String> catDropdown;
     private final ChoiceBox<String> subcatDropdown;
     private final TextField descriptionField;
-    private static final Categories cats = new Categories();
+    private static final Categories cats = Categories.INSTANCE;
 
     public TiFiRecordForm(Consumer<Expense> newExpenseCallback) {
         this.datePicker = new DatePicker(LocalDate.now());
-        datePicker.setMinWidth(100);
+        datePicker.setMinWidth(120);
 
         this.amountField = new TextField();
         amountField.setPromptText("Amount");

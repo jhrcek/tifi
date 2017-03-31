@@ -5,10 +5,11 @@ import java.io.InputStream;
 import java.util.*;
 
 public class Categories {
+    public static final Categories INSTANCE = new Categories();
     private final Map<String, List<String>> cat2subcats = new HashMap<>();
     private final ArrayList<String> sortedCats;
 
-    public Categories() {
+    private Categories() {
         InputStream is = getClass().getResourceAsStream("Categories");
         Scanner scan = new Scanner(is);
         String cat = null;
@@ -21,7 +22,7 @@ public class Categories {
                 cat2subcats.put(cat, new ArrayList<>());
             }
         }
-        
+
         // Ensure all cats and subcats are sorted.
         sortedCats = new ArrayList<>(cat2subcats.keySet());
         Collections.sort(sortedCats);

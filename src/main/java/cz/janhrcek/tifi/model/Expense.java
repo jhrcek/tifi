@@ -12,12 +12,9 @@ public class Expense {
     private int id;
     private LocalDate date;
     private int amount;
-
-
     private String category;
     private String subcategory;
     private String description;
-
 
     public Expense() {
     }

@@ -4,7 +4,6 @@ package cz.janhrcek.tifi.ui;
 import cz.janhrcek.tifi.storage.Storage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -28,7 +27,7 @@ public class Ui {
         });
         loadDbDataIntoTable();
         rootPane = new VBox(
-                wrapInScrollPane(table),
+                table,
                 form
         );
     }
@@ -48,14 +47,6 @@ public class Ui {
                 tableData.add(ExpenseUiModel.wrap(e))
         );
         return tableData;
-    }
-
-    private ScrollPane wrapInScrollPane(TableView<ExpenseUiModel> table) {
-        ScrollPane scrollPane = new ScrollPane(table);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setFitToWidth(true);
-        return scrollPane;
     }
 
     private TableView<ExpenseUiModel> createTable() {

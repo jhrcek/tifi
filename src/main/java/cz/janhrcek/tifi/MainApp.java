@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
+
     final private Storage storage = new Storage();
 
     public static void main(String[] args) {
@@ -17,7 +18,7 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Tiny Finances");
         Ui ui = new Ui(storage);
-        primaryStage.setScene(new Scene(ui.getRoot(), 610, 200));
+        primaryStage.setScene(new Scene(ui.getRoot(), 630, 200));
         primaryStage.show();
     }
 
