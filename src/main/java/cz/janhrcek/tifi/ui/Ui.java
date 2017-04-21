@@ -52,19 +52,21 @@ public class Ui {
     private TableView<ExpenseUiModel> createTable() {
         TableView<ExpenseUiModel> table = new TableView<>();
         table.setEditable(true);
+        TableColumn<ExpenseUiModel, Integer> idCol = new TableColumn<>("Id");
         TableColumn<ExpenseUiModel, LocalDate> dateCol = new TableColumn<>("Date");
         TableColumn<ExpenseUiModel, Integer> amountCol = new TableColumn<>("Amount");
         TableColumn<ExpenseUiModel, Integer> catCol = new TableColumn<>("Category");
         TableColumn<ExpenseUiModel, Integer> subcatCol = new TableColumn<>("Subcategory");
         TableColumn<ExpenseUiModel, String> descCol = new TableColumn<>("Description");
 
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
         catCol.setCellValueFactory(new PropertyValueFactory<>("category"));
         subcatCol.setCellValueFactory(new PropertyValueFactory<>("subcategory"));
         descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
-        table.getColumns().addAll(dateCol, amountCol, catCol, subcatCol, descCol);
+        table.getColumns().addAll(idCol, dateCol, amountCol, catCol, subcatCol, descCol);
         return table;
     }
 }
