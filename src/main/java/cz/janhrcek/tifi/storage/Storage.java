@@ -7,6 +7,7 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -55,5 +56,17 @@ public class Storage {
             System.out.println("Creating new DB file at " + dbFile);
         }
         return "jdbc:h2:" + jdbcPath.toString();
+    }
+
+    public void deleteExpense(int id) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            Expense expense = session.load(Expense.class, id);
+            session.delete(expense);
+            System.out.println("Deleting expense with ID " + id);
+            session.getTransaction().commit();
+        } catch (EntityNotFoundException enf) {
+            System.err.println("Ignoring deletion request, there is no record with ID " + id);
+        }
     }
 }

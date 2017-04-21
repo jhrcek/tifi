@@ -4,13 +4,13 @@ package cz.janhrcek.tifi.ui;
 import cz.janhrcek.tifi.storage.Storage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class Ui {
 
@@ -27,6 +27,7 @@ public class Ui {
         });
         loadDbDataIntoTable();
         rootPane = new VBox(
+                createMenu(),
                 table,
                 form
         );
@@ -34,6 +35,45 @@ public class Ui {
 
     public Pane getRoot() {
         return rootPane;
+    }
+
+    private MenuBar createMenu() {
+        MenuItem deleteAction = new MenuItem("Delete record");
+        deleteAction.setOnAction(event -> {
+            Optional<Integer> oId = getIdToDelete();
+            if (!oId.isPresent()) {
+                System.err.println("Didn't get valid input - ignoring deletion request");
+            }
+            oId.ifPresent(idToDelete -> {
+                storage.deleteExpense(idToDelete);
+                loadDbDataIntoTable();
+            });
+        });
+        Menu actionsMenu = new Menu("Actions");
+        actionsMenu.getItems().add(deleteAction);
+        return new MenuBar(actionsMenu);
+    }
+
+    private Optional<Integer> getIdToDelete() {
+        return askForInput()
+                .filter(this::isValidInt)
+                .map(Integer::parseInt);
+    }
+
+    private Optional<String> askForInput() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setHeaderText("Please enter the id of a record to delete");
+        dialog.setTitle("Delete a record");
+        return dialog.showAndWait();
+    }
+
+    private boolean isValidInt(String s) {
+        try {
+            int ignore = Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
     }
 
     private void loadDbDataIntoTable() {

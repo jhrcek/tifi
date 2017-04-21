@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class TiFiRecordForm extends HBox {
+class TiFiRecordForm extends HBox {
     private final DatePicker datePicker;
     private final TextField amountField;
     private final ChoiceBox<String> catDropdown;
@@ -30,7 +30,16 @@ public class TiFiRecordForm extends HBox {
         this.amountField = new TextField();
         amountField.setPromptText("Amount");
         amountField.setMinWidth(70);
-        amountField.lengthProperty().addListener(ALLOW_NUMBERS_ONLY);
+        // Allow numbers only
+        amountField.lengthProperty().addListener((observable, oldLength, newLength) -> {
+            if (newLength.intValue() > oldLength.intValue()) {
+                String input = amountField.getText();
+                char ch = input.charAt(oldLength.intValue());
+                if (!('0' <= ch && ch <= '9')) {
+                    amountField.setText(input.substring(0, input.length() - 1));
+                }
+            }
+        });
 
         this.catDropdown = new ChoiceBox<>();
         catDropdown.getItems().addAll(cats.getCategories());
@@ -84,19 +93,4 @@ public class TiFiRecordForm extends HBox {
     }
 
 
-    /*
-    * Listens to length of text field that doesn't allow anything else to be entered than numbers.
-    */
-    private final ChangeListener<Number> ALLOW_NUMBERS_ONLY = new ChangeListener<Number>() {
-        @Override
-        public void changed(ObservableValue<? extends Number> observable, Number oldLength, Number newLength) {
-            if (newLength.intValue() > oldLength.intValue()) {
-                String input = amountField.getText();
-                char ch = input.charAt(oldLength.intValue());
-                if (!('0' <= ch && ch <= '9')) {
-                    amountField.setText(input.substring(0, input.length() - 1));
-                }
-            }
-        }
-    };
 }

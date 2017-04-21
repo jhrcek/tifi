@@ -49,5 +49,4 @@ public class ExpenseUiModel {
     public String getSubcategory() {
         return subcategory.get();
     }
-
 }
