@@ -15,7 +15,7 @@ public class MainApp extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         primaryStage.setTitle("Tiny Finances");
         Ui ui = new Ui(storage);
         primaryStage.setScene(new Scene(ui.getRoot(), 630, 200));

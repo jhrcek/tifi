@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 class TiFiRecordForm extends HBox {
+
     private final DatePicker datePicker;
     private final TextField amountField;
     private final ChoiceBox<String> catDropdown;
@@ -44,15 +45,17 @@ class TiFiRecordForm extends HBox {
         this.catDropdown = new ChoiceBox<>();
         catDropdown.getItems().addAll(cats.getCategories());
         catDropdown.setMinWidth(140);
-        catDropdown.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        catDropdown.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                subcatDropdown.getItems().clear();
+
                 List<String> subcats = cats.getSubcategories(newValue);
+
                 if (subcats.isEmpty()) {
                     subcatDropdown.setDisable(true);
                 } else {
                     subcatDropdown.setDisable(false);
-                    subcatDropdown.getItems().clear();
                     subcatDropdown.getItems().addAll(subcats);
                 }
             }
@@ -60,7 +63,6 @@ class TiFiRecordForm extends HBox {
 
         this.subcatDropdown = new ChoiceBox<>();
         subcatDropdown.setMinWidth(100);
-
 
         this.descriptionField = new TextField();
         descriptionField.setPromptText("Description");
@@ -91,6 +93,4 @@ class TiFiRecordForm extends HBox {
             return Optional.empty();
         }
     }
-
-
 }
