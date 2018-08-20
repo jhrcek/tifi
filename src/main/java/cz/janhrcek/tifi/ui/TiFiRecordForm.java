@@ -42,27 +42,26 @@ class TiFiRecordForm extends HBox {
             }
         });
 
+        this.subcatDropdown = new ChoiceBox<>();
+        subcatDropdown.setMinWidth(100);
+
         this.catDropdown = new ChoiceBox<>();
         catDropdown.getItems().addAll(cats.getCategories());
         catDropdown.setMinWidth(140);
-        catDropdown.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                subcatDropdown.getItems().clear();
+        catDropdown.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    subcatDropdown.getItems().clear();
 
-                List<String> subcats = cats.getSubcategories(newValue);
+                    List<String> subcats = cats.getSubcategories(newValue);
 
-                if (subcats.isEmpty()) {
-                    subcatDropdown.setDisable(true);
-                } else {
-                    subcatDropdown.setDisable(false);
-                    subcatDropdown.getItems().addAll(subcats);
-                }
-            }
-        });
+                    if (subcats.isEmpty()) {
+                        subcatDropdown.setDisable(true);
+                    } else {
+                        subcatDropdown.setDisable(false);
+                        subcatDropdown.getItems().addAll(subcats);
+                    }
+                });
 
-        this.subcatDropdown = new ChoiceBox<>();
-        subcatDropdown.setMinWidth(100);
 
         this.descriptionField = new TextField();
         descriptionField.setPromptText("Description");
