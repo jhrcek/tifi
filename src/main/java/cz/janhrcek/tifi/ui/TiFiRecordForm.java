@@ -2,8 +2,6 @@ package cz.janhrcek.tifi.ui;
 
 import cz.janhrcek.tifi.model.Categories;
 import cz.janhrcek.tifi.model.Expense;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;

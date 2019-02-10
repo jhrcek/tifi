@@ -41,7 +41,7 @@ public class Ui {
         MenuItem deleteAction = new MenuItem("Delete record");
         deleteAction.setOnAction(event -> {
             Optional<Integer> oId = getIdToDelete();
-            if (!oId.isPresent()) {
+            if (oId.isEmpty()) {
                 System.err.println("Didn't get valid input - ignoring deletion request");
             }
             oId.ifPresent(idToDelete -> {
